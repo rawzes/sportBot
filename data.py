@@ -24,5 +24,5 @@ async def get_data(offset=0):
         tmp = item.split('¬ZN÷')
         event_title = tmp[0].split('¬ZEE÷')[0]
         event_date = datetime.fromtimestamp(int(tmp[1].split('|¬ZSS÷')[0]), pytz.timezone(TIMEZONE))
-        pairs.append(event_date.strftime('%Y-%m-%d %H:%M:%S') + " - " + event_title)
+        pairs.append(event_date.strftime('%Y-%m-%d %H:%M') + " - " + event_title)
     return pairs

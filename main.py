@@ -20,9 +20,9 @@ async def get_events(day=0):
     events = await data.get_data(day)
     message = ''
     if len(events) == 0:
-        message = 'На сегодня нет спортивных событий'
+        message = messages.NO_EVENTS_MESSAGE
     else:
-        message = ' '.join(events)
+        message = '\n'.join(events)
     return message
 
 
