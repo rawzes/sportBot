@@ -5,6 +5,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
 import messages
 import data
+import server
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -59,4 +60,5 @@ if __name__ == '__main__':
     tomorrow_handler = CommandHandler('after_tomorrow', after_tomorrow)
     application.add_handler(tomorrow_handler)
 
+    server.keep_alive()  # run flask server to keep alive
     application.run_polling()

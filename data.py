@@ -6,7 +6,7 @@ URL1 = 'https://d.flashscore.com/x/feed/fp_37_'
 OFFSET = 0
 URL2 = '_3_en_1'
 TIMEZONE = 'Europe/Minsk'
-EMPTY = ';1:'
+CONTENT_LENGTH = 100
 
 
 async def get_data(offset=0):
@@ -15,7 +15,7 @@ async def get_data(offset=0):
     r = requests.get(url=current_url, headers=headers)
     result = r.text
     pairs = []
-    if EMPTY in result:
+    if len(r.content) < CONTENT_LENGTH:
         return pairs
     result = result[10:]
     list_values = result.split('¬~ZA÷')
@@ -25,5 +25,4 @@ async def get_data(offset=0):
         event_title = tmp[0].split('¬ZEE÷')[0]
         event_date = datetime.fromtimestamp(int(tmp[1].split('|¬ZSS÷')[0]), pytz.timezone(TIMEZONE))
         pairs.append(event_date.strftime('%Y-%m-%d %H:%M:%S') + " - " + event_title)
-
     return pairs
