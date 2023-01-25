@@ -7,6 +7,7 @@ OFFSET = 0
 URL2 = '_3_en_1'
 TIMEZONE = 'Europe/Minsk'
 CONTENT_LENGTH = 100
+SPORT_KINDS = ['Super-G', 'Slalom', 'Giant Slalom', 'Downhill']
 
 
 async def get_data(offset=0):
@@ -16,6 +17,12 @@ async def get_data(offset=0):
     result = r.text
     pairs = []
     if len(r.content) < CONTENT_LENGTH:
+        return pairs
+    is_available = False
+    for line in SPORT_KINDS:
+        if line.lower() in result.lower():
+            is_available = True
+    if not is_available:
         return pairs
     result = result[10:]
     list_values = result.split('¬~ZA÷')
