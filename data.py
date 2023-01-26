@@ -10,6 +10,13 @@ CONTENT_LENGTH = 100
 SPORT_KINDS = ['Super-G', 'Slalom', 'Giant Slalom', 'Downhill']
 
 
+def remove_unwanted_sports(pairs: list, sports: list):
+    for item in pairs.copy():
+        if not any(ext in item for ext in sports):
+            pairs.remove(item)
+    return pairs
+
+
 async def get_data(offset=0):
     current_url = URL1 + str(offset) + URL2
     headers = {"x-fsign": "SW9D1eZo"}
@@ -30,6 +37,17 @@ async def get_data(offset=0):
     for item in list_values:
         tmp = item.split('¬ZN÷')
         event_title = tmp[0].split('¬ZEE÷')[0]
-        event_date = datetime.fromtimestamp(int(tmp[1].split('|¬ZSS÷')[0]), pytz.timezone(TIMEZONE))
-        pairs.append(event_date.strftime('%Y-%m-%d %H:%M') + " - " + event_title)
+
+        date_value = ''
+        if len(tmp[1].split('|¬ZSS÷')[0]) > 10:
+            date_value = tmp[1].split('|¬ZSS÷')[0].split('|')[0]
+        else:
+            date_value = tmp[1].split('|¬ZSS÷')[0]
+        try:
+            event_date = datetime.fromtimestamp(int(date_value), pytz.timezone(TIMEZONE))
+            pairs.append(event_date.strftime('%Y-%m-%d %H:%M') + " - " + event_title + '\n')
+        except ValueError:
+            print('Error occurred')
+        pairs = list(dict.fromkeys(pairs))
+        pairs = remove_unwanted_sports(pairs, SPORT_KINDS)
     return pairs
